@@ -1,0 +1,124 @@
+<div class="dashboard-container">
+    <header class="page-header">
+        <h1>Dashboard</h1>
+        <p class="page-subtitle">Resumen general del sistema</p>
+    </header>
+
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando estadísticas...</p>
+    </div>
+
+    <div *ngIf="!isLoading && stats" class="stats-grid fade-in">
+        <!-- Active Employees -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, var(--primary-500), var(--primary-600));">
+                👥
+            </div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.active_employees }}</div>
+                <div class="stat-label">Empleados Activos</div>
+            </div>
+        </div>
+
+        <!-- Active Projects -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, var(--accent-600), var(--accent-700));">
+                📁
+            </div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.active_projects }}</div>
+                <div class="stat-label">Proyectos Activos</div>
+            </div>
+        </div>
+
+        <!-- Today's Check-ins -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, var(--success-500), var(--success-600));">
+                ✅
+            </div>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats.today_checkins }}</div>
+                <div class="stat-label">Registros Hoy</div>
+            </div>
+        </div>
+
+        <!-- Total Week Hours -->
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, var(--info-500), var(--info-600));">
+                ⏱️
+            </div>
+            <div class="stat-content">
+                <div class="stat-value">{{ getTotalWeekHours().toFixed(1) }}</div>
+                <div class="stat-label">Horas Esta Semana</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hours Breakdown -->
+    <div *ngIf="!isLoading && stats" class="hours-breakdown fade-in">
+        <h2 class="section-title">Desglose de Horas (Última Semana)</h2>
+
+        <div class="breakdown-grid">
+            <div class="breakdown-item">
+                <div class="breakdown-label">Ordinaria Diurna</div>
+                <div class="breakdown-value">{{ stats.week_hours.ordinaria_diurna.toFixed(1) }} hrs</div>
+                <div class="breakdown-bar">
+                    <div class="breakdown-fill"
+                        [style.width.%]="(stats.week_hours.ordinaria_diurna / getTotalWeekHours()) * 100"
+                        style="background: var(--primary-500);"></div>
+                </div>
+            </div>
+
+            <div class="breakdown-item">
+                <div class="breakdown-label">Ordinaria Nocturna</div>
+                <div class="breakdown-value">{{ stats.week_hours.ordinaria_nocturna.toFixed(1) }} hrs</div>
+                <div class="breakdown-bar">
+                    <div class="breakdown-fill"
+                        [style.width.%]="(stats.week_hours.ordinaria_nocturna / getTotalWeekHours()) * 100"
+                        style="background: var(--primary-700);"></div>
+                </div>
+            </div>
+
+            <div class="breakdown-item">
+                <div class="breakdown-label">Extra Diurna</div>
+                <div class="breakdown-value">{{ stats.week_hours.extra_diurna.toFixed(1) }} hrs</div>
+                <div class="breakdown-bar">
+                    <div class="breakdown-fill"
+                        [style.width.%]="(stats.week_hours.extra_diurna / getTotalWeekHours()) * 100"
+                        style="background: var(--warning-500);"></div>
+                </div>
+            </div>
+
+            <div class="breakdown-item">
+                <div class="breakdown-label">Extra Nocturna</div>
+                <div class="breakdown-value">{{ stats.week_hours.extra_nocturna.toFixed(1) }} hrs</div>
+                <div class="breakdown-bar">
+                    <div class="breakdown-fill"
+                        [style.width.%]="(stats.week_hours.extra_nocturna / getTotalWeekHours()) * 100"
+                        style="background: var(--warning-700);"></div>
+                </div>
+            </div>
+
+            <div class="breakdown-item">
+                <div class="breakdown-label">Dominical/Festiva Diurna</div>
+                <div class="breakdown-value">{{ stats.week_hours.dominical_festiva_diurna.toFixed(1) }} hrs</div>
+                <div class="breakdown-bar">
+                    <div class="breakdown-fill"
+                        [style.width.%]="(stats.week_hours.dominical_festiva_diurna / getTotalWeekHours()) * 100"
+                        style="background: var(--accent-500);"></div>
+                </div>
+            </div>
+
+            <div class="breakdown-item">
+                <div class="breakdown-label">Dominical/Festiva Nocturna</div>
+                <div class="breakdown-value">{{ stats.week_hours.dominical_festiva_nocturna.toFixed(1) }} hrs</div>
+                <div class="breakdown-bar">
+                    <div class="breakdown-fill"
+                        [style.width.%]="(stats.week_hours.dominical_festiva_nocturna / getTotalWeekHours()) * 100"
+                        style="background: var(--accent-700);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

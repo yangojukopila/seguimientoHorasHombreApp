@@ -1,0 +1,39 @@
+<div class="kiosk-container fade-in">
+  <div class="kiosk-card">
+    <div class="kiosk-logo">
+      ⚙️ Horas-CMK-CIC
+    </div>
+    
+    <h1 class="kiosk-title">Activar Isla</h1>
+    <p class="kiosk-subtitle">Ingrese el token de la isla para comenzar</p>
+    
+    <div class="form-group">
+      <input
+        type="text"
+        class="form-input form-input-large"
+        [(ngModel)]="token"
+        (input)="onTokenInput($event)"
+        placeholder="Token de la isla"
+        [disabled]="isLoading"
+        autofocus
+      />
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-message fade-in">
+      <p style="color: var(--error-600); font-weight: 500; margin-bottom: var(--spacing-lg);">
+        ⚠️ {{ errorMessage }}
+      </p>
+    </div>
+    
+    <button
+      class="btn btn-primary kiosk-btn"
+      (click)="activateIsland()"
+      [disabled]="isLoading || !token.trim()"
+    >
+      <span *ngIf="!isLoading">Activar Isla</span>
+      <span *ngIf="isLoading">
+        <div class="spinner" style="margin: 0 auto;"></div>
+      </span>
+    </button>
+  </div>
+</div>

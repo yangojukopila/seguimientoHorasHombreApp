@@ -1,0 +1,33 @@
+<div class="login-container">
+    <div class="login-card fade-in">
+        <div class="login-header">
+            <h1>⚙️ Horas-CMK-CIC</h1>
+            <p>Panel Administrativo</p>
+        </div>
+
+        <form (ngSubmit)="login()">
+            <div class="form-group">
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-input" [(ngModel)]="email" name="email" placeholder="admin@empresa.com"
+                    [disabled]="isLoading" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-input" [(ngModel)]="password" name="password" placeholder="••••••••"
+                    [disabled]="isLoading" required />
+            </div>
+
+            <div *ngIf="errorMessage" class="error-message">
+                {{ errorMessage }}
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading" style="width: 100%;">
+                <span *ngIf="!isLoading">Iniciar Sesión</span>
+                <span *ngIf="isLoading">
+                    <div class="spinner" style="margin: 0 auto;"></div>
+                </span>
+            </button>
+        </form>
+    </div>
+</div>

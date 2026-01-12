@@ -1,0 +1,34 @@
+<div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <h2>⚙️ Horas-CMK-CIC</h2>
+            <p class="sidebar-subtitle">Panel Admin</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <!-- Future menu items will go here -->
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <p class="user-email">{{ userEmail }}</p>
+                </div>
+            </div>
+            <button class="btn-logout" (click)="logout()">
+                🚪 Cerrar Sesión
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

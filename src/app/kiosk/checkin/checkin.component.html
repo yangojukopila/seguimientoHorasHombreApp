@@ -1,0 +1,263 @@
+<div class="kiosk-container">
+    <div class="kiosk-card">
+        <!-- Header -->
+        <div class="kiosk-header">
+            <div class="kiosk-logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <span>Horas-CMK-CIC</span>
+            </div>
+            <div class="kiosk-subtitle">Sistema de Control de Asistencia</div>
+        </div>
+
+        <!-- State: Enter Cedula -->
+        <div class="step-content" *ngIf="currentState === KioskState.ENTER_CEDULA">
+            <h2 class="step-title">Ingrese su cédula</h2>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <input type="text" class="form-input-premium" [(ngModel)]="cedula" (input)="onCedulaInput($event)"
+                        (keyup.enter)="checkEmployee()" placeholder="1234567890" inputmode="numeric" pattern="[0-9]*"
+                        autofocus />
+                </div>
+            </div>
+
+            <button class="btn-primary-large" (click)="checkEmployee()" [disabled]="!cedula.trim()">
+                <span>Continuar</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+
+            <button class="btn-close-kiosk" (click)="deactivateIsland()">
+                <svg class="close-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                Cerrar Kiosk
+            </button>
+        </div>
+
+        <!-- State: Show Action (Check-in or Check-out) -->
+        <div class="step-content" *ngIf="currentState === KioskState.SHOW_ACTION && employeeStatus">
+            <button class="btn-back" (click)="goBack()">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                Volver
+            </button>
+
+            <!-- Employee Info -->
+            <div class="employee-card">
+                <div class="employee-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="employee-info">
+                    <h3 class="employee-name">{{ employeeStatus.employee.full_name }}</h3>
+                    <p class="employee-position">{{ employeeStatus.employee.position }}</p>
+                    <p class="employee-cedula">CC: {{ employeeStatus.employee.cedula }}</p>
+                </div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="status-indicator" [class.status-active]="employeeStatus.hasActiveShift"
+                [class.status-inactive]="!employeeStatus.hasActiveShift">
+                <div class="status-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        *ngIf="employeeStatus.hasActiveShift">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                        <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        *ngIf="!employeeStatus.hasActiveShift">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                        <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <div class="status-text">
+                    <h4 *ngIf="employeeStatus.hasActiveShift">Turno Activo</h4>
+                    <h4 *ngIf="!employeeStatus.hasActiveShift">Sin Turno Activo</h4>
+                    <p *ngIf="employeeStatus.hasActiveShift">Trabajando actualmente</p>
+                    <p *ngIf="!employeeStatus.hasActiveShift">Listo para iniciar jornada</p>
+                </div>
+            </div>
+
+            <!-- Current Project Info (if has active shift) -->
+            <div class="project-info-card" *ngIf="employeeStatus.hasActiveShift">
+                <div class="info-header">
+                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M22 19C22 19.5304 21.7893 20.0391 21.4142 20.4142C21.0391 20.7893 20.5304 21 20 21H4C3.46957 21 2.96086 20.7893 2.58579 20.4142C2.21071 20.0391 2 19.5304 2 19V5C2 4.46957 2.21071 3.96086 2.58579 3.58579C2.96086 3.21071 3.46957 3 4 3H9L11 6H20C20.5304 6 21.0391 6.21071 21.4142 6.58579C21.7893 6.96086 22 7.46957 22 8V19Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>Proyecto Actual</span>
+                </div>
+                <p class="project-name">{{ getCurrentProject() }}</p>
+            </div>
+
+            <!-- Statistics (if has active shift) -->
+            <div class="stats-grid" *ngIf="employeeStatus.hasActiveShift">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Entrada</p>
+                        <p class="stat-value">{{ getCheckInTime() }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                            <path d="M12 6V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <path d="M12 12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Tiempo Transcurrido</p>
+                        <p class="stat-value">{{ getElapsedTime() }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button: CHECK-IN or CHECK-OUT -->
+            <button class="btn-action" [class.btn-checkin]="!employeeStatus.hasActiveShift"
+                [class.btn-checkout]="employeeStatus.hasActiveShift"
+                (click)="employeeStatus.hasActiveShift ? performCheckOut() : goToProjectSelection()">
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    *ngIf="!employeeStatus.hasActiveShift">
+                    <path
+                        d="M15 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H15"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10 17L15 12L10 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M15 12H3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    *ngIf="employeeStatus.hasActiveShift">
+                    <path
+                        d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M21 12H9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <span>{{ employeeStatus.hasActiveShift ? 'Registrar Salida' : 'Registrar Entrada' }}</span>
+            </button>
+        </div>
+
+        <!-- State: Select Project (only for check-in) -->
+        <div class="step-content" *ngIf="currentState === KioskState.SELECT_PROJECT">
+            <button class="btn-back" (click)="goBack()">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                Volver
+            </button>
+
+            <h2 class="step-title">Seleccione el proyecto</h2>
+
+            <div class="projects-list">
+                <button *ngFor="let project of projects" class="project-card"
+                    [class.selected]="selectedProjectId === project.id" (click)="selectedProjectId = project.id">
+                    <div class="project-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M22 19C22 19.5304 21.7893 20.0391 21.4142 20.4142C21.0391 20.7893 20.5304 21 20 21H4C3.46957 21 2.96086 20.7893 2.58579 20.4142C2.21071 20.0391 2 19.5304 2 19V5C2 4.46957 2.21071 3.96086 2.58579 3.58579C2.96086 3.21071 3.46957 3 4 3H9L11 6H20C20.5304 6 21.0391 6.21071 21.4142 6.58579C21.7893 6.96086 22 7.46957 22 8V19Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-code">{{ project.code }}</div>
+                        <div class="project-name">{{ project.name }}</div>
+                        <div class="project-client">{{ project.client }}</div>
+                    </div>
+                    <div class="project-check" *ngIf="selectedProjectId === project.id">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </button>
+            </div>
+
+            <button class="btn-primary-large" (click)="performCheckIn()" [disabled]="!selectedProjectId">
+                <span>Confirmar Entrada</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- State: Processing -->
+        <div class="step-content centered" *ngIf="currentState === KioskState.PROCESSING">
+            <div class="processing-animation">
+                <div class="spinner-large"></div>
+                <p class="processing-text">Procesando...</p>
+            </div>
+        </div>
+
+        <!-- State: Success -->
+        <div class="step-content centered" *ngIf="currentState === KioskState.SUCCESS">
+            <div class="result-animation success-animation">
+                <svg class="result-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                    <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h2 class="result-title success-title">¡Éxito!</h2>
+            <p class="result-message">{{ message }}</p>
+        </div>
+
+        <!-- State: Error -->
+        <div class="step-content centered" *ngIf="currentState === KioskState.ERROR">
+            <div class="result-animation error-animation">
+                <svg class="result-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 8V12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                    <circle cx="12" cy="16" r="1" fill="currentColor" />
+                </svg>
+            </div>
+            <h2 class="result-title error-title">Atención</h2>
+            <p class="result-message">{{ message }}</p>
+        </div>
+    </div>
+</div>

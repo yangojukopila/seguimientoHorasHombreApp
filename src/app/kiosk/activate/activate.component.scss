@@ -1,0 +1,7 @@
+.error-message {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: rgba(244, 67, 54, 0.1);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--error-600);
+}
