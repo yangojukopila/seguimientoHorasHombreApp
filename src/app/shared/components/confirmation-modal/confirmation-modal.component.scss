@@ -1,0 +1,288 @@
+// Modal Overlay
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.5rem;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Modal Container
+.modal-container {
+  width: 100%;
+  max-width: 480px;
+  animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+// Modal Card
+.modal-card {
+  background: linear-gradient(135deg, 
+    rgba(30, 58, 138, 0.95) 0%,
+    rgba(59, 130, 246, 0.9) 100%
+  );
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+  }
+}
+
+// Modal Icon
+.modal-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, 
+    rgba(239, 68, 68, 0.2),
+    rgba(220, 38, 38, 0.3)
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 0 0 8px rgba(239, 68, 68, 0.1),
+    0 8px 20px rgba(239, 68, 68, 0.2);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  svg {
+    width: 48px;
+    height: 48px;
+    color: #fca5a5;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+}
+
+// Modal Title
+.modal-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+// Modal Message
+.modal-message {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Modal Actions
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+// Base Button Styles
+.btn-cancel,
+.btn-confirm {
+  flex: 1;
+  max-width: 180px;
+  padding: 1rem 1.75rem;
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  &:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// Cancel Button
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 20px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    svg {
+      transform: rotate(90deg);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Confirm Button
+.btn-confirm {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: #ffffff;
+  border: 2px solid rgba(220, 38, 38, 0.3);
+  box-shadow: 
+    0 4px 12px rgba(220, 38, 38, 0.3),
+    0 0 20px rgba(220, 38, 38, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-color: rgba(220, 38, 38, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 24px rgba(220, 38, 38, 0.5),
+      0 0 30px rgba(220, 38, 38, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    svg {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 8px rgba(239, 68, 68, 0.1),
+      0 8px 20px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 12px rgba(239, 68, 68, 0.15),
+      0 12px 30px rgba(239, 68, 68, 0.3);
+  }
+}
+
+// Responsive Design
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .modal-icon {
+    width: 64px;
+    height: 64px;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .modal-title {
+    font-size: 1.5rem;
+  }
+
+  .modal-message {
+    font-size: 1rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-cancel,
+  .btn-confirm {
+    max-width: 100%;
+    width: 100%;
+  }
+}

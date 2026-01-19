@@ -28,4 +28,8 @@ export class LayoutComponent implements OnInit {
       await this.authService.signOut();
     }
   }
+
+  navigateToKiosk() {
+    this.router.navigate(['/kiosk/activate']);
+  }
 }

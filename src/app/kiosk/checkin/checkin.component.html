@@ -260,4 +260,15 @@
             <p class="result-message">{{ message }}</p>
         </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <app-confirmation-modal
+        [isVisible]="showCloseModal"
+        [title]="'¿Cerrar Kiosk?'"
+        [message]="'Esta acción desactivará la isla y regresará a la pantalla de activación. ¿Está seguro que desea continuar?'"
+        [confirmText]="'Sí, cerrar'"
+        [cancelText]="'Cancelar'"
+        (onConfirm)="confirmCloseKiosk()"
+        (onCancel)="cancelCloseKiosk()"
+    ></app-confirmation-modal>
 </div>

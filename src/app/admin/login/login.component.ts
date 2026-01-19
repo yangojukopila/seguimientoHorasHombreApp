@@ -39,4 +39,8 @@ export class LoginComponent {
     }
     // If successful, authService will navigate to dashboard
   }
+
+  navigateToKiosk() {
+    this.router.navigate(['/kiosk/activate']);
+  }
 }

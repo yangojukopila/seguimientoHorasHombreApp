@@ -5,6 +5,55 @@
     justify-content: center;
     background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-700) 100%);
     padding: var(--spacing-xl);
+    position: relative;
+}
+
+// Kiosk Access Button
+.kiosk-access-btn {
+    position: fixed;
+    top: var(--spacing-xl);
+    right: var(--spacing-xl);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0.7;
+
+    svg {
+        width: 28px;
+        height: 28px;
+        color: rgba(255, 255, 255, 0.8);
+        transition: all var(--transition-base);
+    }
+
+    &:hover {
+        opacity: 1;
+        background: rgba(6, 182, 212, 0.2);
+        border-color: rgba(6, 182, 212, 0.5);
+        box-shadow: 
+            0 8px 24px rgba(6, 182, 212, 0.3),
+            0 0 0 1px rgba(6, 182, 212, 0.2) inset;
+        transform: scale(1.05);
+
+        svg {
+            color: rgb(6, 182, 212);
+            transform: translateY(-2px);
+        }
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
 }
 
 .login-card {

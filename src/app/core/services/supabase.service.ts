@@ -11,7 +11,16 @@ export class SupabaseService {
     constructor() {
         this.supabase = createClient(
             environment.supabase.url,
-            environment.supabase.anonKey
+            environment.supabase.anonKey,
+            {
+                auth: {
+                    storage: window.localStorage,
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: true,
+                    flowType: 'implicit'
+                }
+            }
         );
     }
 

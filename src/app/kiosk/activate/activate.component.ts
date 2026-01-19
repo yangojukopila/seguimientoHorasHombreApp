@@ -55,4 +55,8 @@ export class ActivateComponent implements OnInit {
     this.token = input.value;
     this.errorMessage = '';
   }
+
+  navigateToAdmin() {
+    this.router.navigate(['/admin']);
+  }
 }

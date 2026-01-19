@@ -5,6 +5,7 @@ import { Project, Employee, TimeRecord } from '../../core/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { format } from 'date-fns';
+import { ConfirmationModalComponent } from '../../shared/components/confirmation-modal/confirmation-modal.component';
 
 enum KioskState {
   ENTER_CEDULA = 'ENTER_CEDULA',
@@ -24,7 +25,7 @@ interface EmployeeStatus {
 @Component({
   selector: 'app-checkin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmationModalComponent],
   templateUrl: './checkin.component.html',
   styleUrl: './checkin.component.scss'
 })
@@ -35,6 +36,7 @@ export class CheckinComponent implements OnInit {
   projects: Project[] = [];
   employeeStatus: EmployeeStatus | null = null;
   message: string = '';
+  showCloseModal: boolean = false;
 
   KioskState = KioskState;
 
@@ -202,9 +204,16 @@ export class CheckinComponent implements OnInit {
   }
 
   deactivateIsland() {
-    if (confirm('¿Está seguro que desea desactivar esta isla?')) {
-      this.kioskService.clearIslandToken();
-      this.router.navigate(['/kiosk/activate']);
-    }
+    this.showCloseModal = true;
+  }
+
+  confirmCloseKiosk() {
+    this.showCloseModal = false;
+    this.kioskService.clearIslandToken();
+    this.router.navigate(['/kiosk/activate']);
+  }
+
+  cancelCloseKiosk() {
+    this.showCloseModal = false;
   }
 }
